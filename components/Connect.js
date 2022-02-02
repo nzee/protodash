@@ -1,6 +1,22 @@
 import React from "react";
+import AppContext from "../components/AppContext";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useMoralis } from "react-moralis";
 
 function Connect() {
+  const { isAuthenticated, user, authenticate } = useMoralis();
+  const [wallet, setWallet] = useState(false);
+
+  const value = useContext(AppContext);
+  let { walletAddr } = value.state;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setWallet(user.get("ethAddress"));
+      value.setWalletAddr(user.get("ethAddress"));
+    }
+  }, [isAuthenticated]);
+
   return (
     <div>
       <style
@@ -89,7 +105,7 @@ function Connect() {
             </div>
             <a
               className="block flex items-center justify-center bg-gray-200 hover:bg-gray-300 p-8 text-md font-semibold text-gray-800 uppercase mt-16"
-              href="#"
+              onClick={() => authenticate()}
             >
               <span>Connect Wallet</span>
               <span className="font-medium text-gray-700 ml-2">➔</span>

@@ -2,8 +2,34 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Connect from "../components/Connect";
+import AppContext from "../components/AppContext";
+import { useState, useEffect } from "react";
+import { createContext, useContext } from "react";
+import { useMoralis } from "react-moralis";
+import Portfolio from "../components/Portfolio";
+import DexGuru, { ChainsListModel } from "dexguru-sdk";
 
 export default function Home() {
+  const [tokenFinance, setTokenFinance] = useState({});
+  const [tokenPrice, setTokenPrice] = useState(0);
+  const [volume, setVolume] = useState(0);
+  const { isAuthenticated, user, authenticate, logout } = useMoralis();
+  const value = useContext(AppContext);
+  let { walletAddr } = value.state;
+  let chain = "43114";
+  let token = "0x959b88966fc5b261df8359961357d34f4ee27b4a";
+  var _apiKey = process.env.NEXT_PUBLIC_DEXGURU_API_KEY;
+  const sdk = new DexGuru(_apiKey, "https://api.dev.dex.guru");
+  let dollarUSLocale = Intl.NumberFormat("en-US");
+
+  useEffect(async () => {
+    const response = await sdk.getTokenFinance(chain, token);
+
+    console.log(response);
+    setTokenPrice(response.price_usd);
+    setVolume(response.volume_24h_usd);
+  }, []);
+
   return (
     <div>
       {/* component */}
@@ -80,23 +106,8 @@ export default function Home() {
                             className="flex flex-col justify-center px-4 py-4 bg-white border border-gray-300 rounded"
                           >
                             <div>
-                              <div>
-                                <p className="flex items-center justify-end text-green-500 text-md">
-                                  <span className="font-bold">6%</span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="w-5 h-5 fill-current"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      className="heroicon-ui"
-                                      d="M20 15a1 1 0 002 0V7a1 1 0 00-1-1h-8a1 1 0 000 2h5.59L13 13.59l-3.3-3.3a1 1 0 00-1.4 0l-6 6a1 1 0 001.4 1.42L9 12.4l3.3 3.3a1 1 0 001.4 0L20 9.4V15z"
-                                    />
-                                  </svg>
-                                </p>
-                              </div>
                               <p className="text-3xl font-semibold text-center text-gray-800">
-                                $0.00052889
+                                ${parseFloat(tokenPrice).toFixed(6)}
                               </p>
                               <p className="text-lg text-center text-gray-500">
                                 Price
@@ -108,26 +119,11 @@ export default function Home() {
                             className="flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded sm:mt-0"
                           >
                             <div>
-                              <div>
-                                <p className="flex items-center justify-end text-red-500 text-md">
-                                  <span className="font-bold">6%</span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="w-5 h-5 fill-current"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      className="heroicon-ui"
-                                      d="M20 9a1 1 0 012 0v8a1 1 0 01-1 1h-8a1 1 0 010-2h5.59L13 10.41l-3.3 3.3a1 1 0 01-1.4 0l-6-6a1 1 0 011.4-1.42L9 11.6l3.3-3.3a1 1 0 011.4 0l6.3 6.3V9z"
-                                    />
-                                  </svg>
-                                </p>
-                              </div>
                               <p className="text-3xl font-semibold text-center text-gray-800">
-                                $5,755,766
+                                13,320+
                               </p>
                               <p className="text-lg text-center text-gray-500">
-                                Market Cap
+                                Token Holders
                               </p>
                             </div>
                           </div>
@@ -136,26 +132,14 @@ export default function Home() {
                             className="flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded sm:mt-0"
                           >
                             <div>
-                              <div>
-                                <p className="flex items-center justify-end text-gray-500 text-md">
-                                  <span className="font-bold">0%</span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="w-5 h-5 fill-current"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      className="heroicon-ui"
-                                      d="M17 11a1 1 0 010 2H7a1 1 0 010-2h10z"
-                                    />
-                                  </svg>
-                                </p>
-                              </div>
                               <p className="text-3xl font-semibold text-center text-gray-800">
-                                $2,425,721
+                                $
+                                {dollarUSLocale.format(
+                                  parseFloat(volume).toFixed(0)
+                                )}
                               </p>
                               <p className="text-lg text-center text-gray-500">
-                                Trading Volume
+                                Trading Volume(24h)
                               </p>
                             </div>
                           </div>
@@ -182,12 +166,18 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg ">
               <div className="px-6">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                    <div className="py-6 px-6 mt-32 sm:mt-0"></div>
-                  </div>
-                </div>
-                <Connect />
+                {isAuthenticated ? (
+                  <>
+                    <Portfolio
+                      key={token}
+                      wallet={walletAddr}
+                      chain={chain}
+                      token={token}
+                    />
+                  </>
+                ) : (
+                  <Connect />
+                )}
               </div>
             </div>
           </div>
@@ -196,7 +186,21 @@ export default function Home() {
               <div className="flex flex-wrap items-center md:justify-between justify-center">
                 <div className="w-full md:w-6/12 px-4 mx-auto text-center">
                   <div className="text-sm text-blueGray-500 font-semibold py-1">
-                    Made by folks from<a href="defidash.carrd.co"> DeFiDash.</a>
+                    Made by folks from
+                    <a
+                      rel="noreferrer"
+                      target="_blank"
+                      href="https://defidash.carrd.co"
+                    >
+                      {" "}
+                      DeFiDash.
+                    </a>
+                    <br />
+                    {isAuthenticated ? (
+                      <a onClick={() => logout()}>logout</a>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
