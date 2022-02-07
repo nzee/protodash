@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
-import { TelegramShareButton, TwitterShareButton } from "react-share";
 
 function Portfolio({ wallet, token, chain }) {
   const [tokenJson, setTokenJson] = useState(false);
@@ -288,15 +287,31 @@ function Portfolio({ wallet, token, chain }) {
                               ? "$" + parseFloat(txn.amount_usd).toFixed(2)
                               : "-"}
                           </td>
-                          <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                          <td
+                            className={`border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ${
+                              txn.tokens_out[0].amount * tokenSummary.price -
+                                txn.amount_usd >
+                              0
+                                ? "text-green-800"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {" "}
+                            {txn.tokens_out[0].amount * tokenSummary.price -
+                              txn.amount_usd >
+                            0
+                              ? "+"
+                              : "-"}
                             {txn.tokens_in[0].address == token
-                              ? "-"
+                              ? ""
                               : "$" +
-                                parseFloat(
-                                  txn.tokens_out[0].amount *
-                                    tokenSummary.price -
-                                    txn.amount_usd
-                                ).toFixed(2)}
+                                Math.abs(
+                                  parseFloat(
+                                    txn.tokens_out[0].amount *
+                                      tokenSummary.price -
+                                      txn.amount_usd
+                                  ).toFixed(2)
+                                )}
                           </td>
                           <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token ? "Sell" : "Buy"}
@@ -315,11 +330,13 @@ function Portfolio({ wallet, token, chain }) {
             <br />
             <div>
               <img
-                src={`https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`}
+                src={
+                  bestTrade &&
+                  `https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`
+                }
               />
             </div>
             <br />
-            <TwitterShareButton title="My best UNIV Trade " />
           </div>
         </div>
       </section>
