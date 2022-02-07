@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
+import { TelegramShareButton, TwitterShareButton } from "react-share";
 
 function Portfolio({ wallet, token, chain }) {
   const [tokenJson, setTokenJson] = useState(false);
@@ -9,6 +10,7 @@ function Portfolio({ wallet, token, chain }) {
   const [delta, setDelta] = useState(0);
   const [pnl, setPnL] = useState(0);
   const [totalWorth, setTotalWorth] = useState(0);
+  const [bestTrade, setBestTrade] = useState(false);
   var profits = 0;
 
   useEffect(() => {
@@ -61,6 +63,54 @@ function Portfolio({ wallet, token, chain }) {
       );
     }
   }, [totalWorth, tokenJson]);
+
+  useEffect(() => {
+    if (tokenJson) {
+      var _current_price = tokenSummary.price;
+
+      var best_delta = 0;
+      var best_trade = {};
+
+      // tokenJson[token].buys.map((txn) => {
+      //   let _best_delta = {}
+      //   _best_delta[txn.block_number] = {
+      //     delta: 0,
+      //     entry_price: 0,
+      //     current_price: 0,
+      //   };
+      // });
+      var _delta = 0;
+      var _current_best_delta = 0;
+
+      tokenJson[token].buys.map((txn) => {
+        let _delta = (_current_price * 100) / txn.tokens_out[0].price_usd;
+        _delta = _delta - 100;
+
+        if (_delta > _current_best_delta) {
+          _current_best_delta = _delta;
+          best_trade = {
+            delta: parseFloat(_delta).toFixed(0),
+            entry_price: parseFloat(txn.tokens_out[0].price_usd).toFixed(5),
+            current_price: parseFloat(_current_price).toFixed(5),
+          };
+        }
+
+        // _best_delta[txn.block_number] = {
+        //   delta: _delta,
+        //   entry_price: txn.tokens_out[0].price_usd,
+        //   current_price: _current_price,
+        // };
+        // best_delta.push(_best_delta);
+
+        // _best_delta.push({
+        //   key: txn.block_number,
+        //   value: _delta,
+        // });
+      });
+      console.log("deltas::", best_trade);
+      setBestTrade(best_trade);
+    }
+  }, [tokenJson]);
 
   return (
     <>
@@ -257,6 +307,19 @@ function Portfolio({ wallet, token, chain }) {
                 </tbody>
               </table>
             </div>
+          </div>
+          <br />
+
+          <div className="flex flex-col py-10 border-t-2">
+            <h1 className=" font-bold text-2xl m-auto">Share on Twitter</h1>
+            <br />
+            <div>
+              <img
+                src={`https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`}
+              />
+            </div>
+            <br />
+            <TwitterShareButton title="My best UNIV Trade " />
           </div>
         </div>
       </section>
