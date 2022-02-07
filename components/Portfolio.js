@@ -214,10 +214,12 @@ function Portfolio({ wallet, token, chain }) {
                           </th>
                           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
                             {txn.tokens_in[0].address == token
-                              ? parseFloat(txn.tokens_in[0].price_usd).toFixed(
+                              ? "$" +
+                                parseFloat(txn.tokens_in[0].price_usd).toFixed(
                                   5
                                 )
-                              : parseFloat(txn.tokens_out[0].price_usd).toFixed(
+                              : "$" +
+                                parseFloat(txn.tokens_out[0].price_usd).toFixed(
                                   5
                                 )}
                           </td>
@@ -229,17 +231,18 @@ function Portfolio({ wallet, token, chain }) {
                           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token
                               ? "-"
-                              : parseFloat(txn.amount_usd).toFixed(2)}
+                              : "$" + parseFloat(txn.amount_usd).toFixed(2)}
                           </td>
                           <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token
-                              ? parseFloat(txn.amount_usd).toFixed(2)
+                              ? "$" + parseFloat(txn.amount_usd).toFixed(2)
                               : "-"}
                           </td>
                           <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token
                               ? "-"
-                              : parseFloat(
+                              : "$" +
+                                parseFloat(
                                   txn.tokens_out[0].amount *
                                     tokenSummary.price -
                                     txn.amount_usd
