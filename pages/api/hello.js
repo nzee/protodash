@@ -93,7 +93,7 @@ export default async function handler(req, res) {
         txn.tokens_out[0].price_usd;
 
       tokens_json[txn.tokens_out[0].address]["total_buy_value"] +=
-        txn.tokens_out[0].amount * txn.tokens_out[0].price_usd;
+        txn.amount_usd;
 
       tokens_json[txn.tokens_out[0].address]["timestamp"] = txn.timestamp;
       tokens_json[txn.tokens_out[0].address]["symbol"] =
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
       tokens_json[txn.tokens_out[0].address]["total_buy_amount"] +=
         txn.tokens_out[0].amount;
       tokens_json[txn.tokens_out[0].address]["total_buy_value"] +=
-        txn.tokens_out[0].amount * txn.tokens_out[0].price_usd;
+        txn.amount_usd;
 
       tokens_json[txn.tokens_out[0].address]["timestamp"] = txn.timestamp;
       tokens_json[txn.tokens_out[0].address]["symbol"] =
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
         txn.tokens_in[0].amount;
 
       tokens_json[txn.tokens_in[0].address]["total_sell_value"] +=
-        txn.tokens_in[0].amount * txn.tokens_in[0].price_usd;
+        txn.amount_usd;
 
       tokens_json[txn.tokens_in[0].address]["timestamp"] = txn.timestamp;
       tokens_json[txn.tokens_in[0].address]["symbol"] = txn.tokens_in[0].symbol;
@@ -153,7 +153,7 @@ export default async function handler(req, res) {
       tokens_json[txn.tokens_in[0].address]["total_sell_amount"] +=
         txn.tokens_in[0].amount;
       tokens_json[txn.tokens_in[0].address]["total_sell_value"] +=
-        txn.tokens_in[0].amount * txn.tokens_in[0].price_usd;
+        txn.amount_usd;
 
       tokens_json[txn.tokens_in[0].address]["timestamp"] = txn.timestamp;
       tokens_json[txn.tokens_in[0].address]["symbol"] = txn.tokens_in[0].symbol;

@@ -6,6 +6,7 @@ function Portfolio({ wallet, token, chain }) {
   const [history, setHistory] = useState(false);
   const [tokenSummary, setTokenSummary] = useState({});
   const [abp, setABP] = useState(0);
+  const [delta, setDelta] = useState(0);
   const [pnl, setPnL] = useState(0);
   const [totalWorth, setTotalWorth] = useState(0);
   var profits = 0;
@@ -30,11 +31,20 @@ function Portfolio({ wallet, token, chain }) {
 
   useEffect(() => {
     try {
-      setABP(tokenJson[token].total_buy_worth / tokenJson[token].total_buys);
+      console.log("tokenJson", tokenJson);
+      setABP(
+        tokenJson[token].total_buy_value / tokenJson[token].total_buy_amount
+      );
     } catch (e) {
       console.log("json", tokenJson);
     }
   }, [tokenJson]);
+
+  useEffect(() => {
+    let _delta = (tokenSummary.price * 100) / abp;
+    _delta = _delta - 100;
+    setDelta(parseFloat(_delta).toFixed(2));
+  }, [abp]);
 
   useEffect(() => {
     setTotalWorth(tokenSummary.amount * tokenSummary.price);
@@ -77,9 +87,45 @@ function Portfolio({ wallet, token, chain }) {
                   <h3 className="text-sm leading-6 font-medium text-gray-400">
                     Avg. Buy Price
                   </h3>
-                  <p className="text-3xl font-bold text-black">
-                    ${parseFloat(abp).toFixed(4)}
-                  </p>
+                  <div className="flex flex-row">
+                    <p className="text-3xl font-bold text-black">
+                      ${parseFloat(abp).toFixed(4)}
+                    </p>
+                    <p class="ml-4 flex items-center justify-end text-green-500 text-md">
+                      <span class="font-bold">{delta}%</span>
+                      {delta > 0 ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                          />
+                        </svg>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -142,6 +188,9 @@ function Portfolio({ wallet, token, chain }) {
                       Sells
                     </th>
                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                      PnL
+                    </th>
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                       Type
                     </th>
                   </tr>
@@ -150,8 +199,15 @@ function Portfolio({ wallet, token, chain }) {
                   {history &&
                     history.map((txn) => {
                       return (
-                        <tr key={txn.transaction_address}>
-                          <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
+                        <tr
+                          key={txn.transaction_address}
+                          className={
+                            txn.tokens_in[0].address == token
+                              ? "text-red-700"
+                              : "text-green-700"
+                          }
+                        >
+                          <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                             <Moment format="YYYY/MM/DD" unix>
                               {txn.timestamp}
                             </Moment>
@@ -173,12 +229,21 @@ function Portfolio({ wallet, token, chain }) {
                           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token
                               ? "-"
-                              : parseFloat(txn.tokens_in[0].amount).toFixed(2)}
+                              : parseFloat(txn.amount_usd).toFixed(2)}
                           </td>
                           <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token
-                              ? parseFloat(txn.tokens_out[0].amount).toFixed(2)
+                              ? parseFloat(txn.amount_usd).toFixed(2)
                               : "-"}
+                          </td>
+                          <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                            {txn.tokens_in[0].address == token
+                              ? "-"
+                              : parseFloat(
+                                  txn.tokens_out[0].amount *
+                                    tokenSummary.price -
+                                    txn.amount_usd
+                                ).toFixed(2)}
                           </td>
                           <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             {txn.tokens_in[0].address == token ? "Sell" : "Buy"}
