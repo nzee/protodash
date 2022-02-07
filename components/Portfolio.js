@@ -91,8 +91,8 @@ function Portfolio({ wallet, token, chain }) {
                     <p className="text-3xl font-bold text-black">
                       ${parseFloat(abp).toFixed(4)}
                     </p>
-                    <p class="ml-4 flex items-center justify-end text-green-500 text-md">
-                      <span class="font-bold">{delta}%</span>
+                    <p className="ml-4 flex items-center justify-end text-green-500 text-md">
+                      <span className="font-bold">{delta}%</span>
                       {delta > 0 ? (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
