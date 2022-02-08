@@ -4,7 +4,8 @@ import Moment from "react-moment";
 function Portfolio({ wallet, token, chain }) {
   const [tokenJson, setTokenJson] = useState(false);
   const [history, setHistory] = useState(false);
-  const [tokenSummary, setTokenSummary] = useState({});
+  const [tokenSummary, setTokenSummary] = useState(false);
+  const [tokenAvailable, setTokenAvailable] = useState(false);
   const [abp, setABP] = useState(0);
   const [delta, setDelta] = useState(0);
   const [pnl, setPnL] = useState(0);
@@ -13,22 +14,29 @@ function Portfolio({ wallet, token, chain }) {
   var profits = 0;
 
   useEffect(() => {
+    console.log("walletttt:::", wallet);
+    fetch(
+      `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=avax&is_all=true`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("debank", data);
+        try {
+          setTokenSummary(data.filter((t) => t.id == token)[0]);
+          setTokenAvailable(true);
+        } catch (e) {
+          setTokenAvailable(false);
+          return;
+        }
+      });
+
     fetch(`/api/hello?token=${token}&chain=${chain}&wallet=${wallet}`)
       .then((response) => response.json())
       .then((data) => {
         setTokenJson(data.transactions);
         setHistory(data.history);
       });
-
-    fetch(
-      `https://openapi.debank.com/v1/user/token_list?id=0xe66037d732ac018358a999ea4b8f4a561e87b7e0&chain_id=avax&is_all=true`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("debank", data);
-        setTokenSummary(data.filter((t) => t.id == token)[0]);
-      });
-  }, []);
+  }, [wallet]);
 
   useEffect(() => {
     try {
@@ -48,11 +56,13 @@ function Portfolio({ wallet, token, chain }) {
   }, [abp]);
 
   useEffect(() => {
-    setTotalWorth(tokenSummary.amount * tokenSummary.price);
+    if (tokenAvailable) {
+      setTotalWorth(tokenSummary.amount * tokenSummary.price);
+    }
   }, [tokenSummary]);
 
   useEffect(() => {
-    if (tokenJson) {
+    if (tokenJson[token]) {
       setPnL(
         tokenJson[token].total_buys > 0
           ? totalWorth +
@@ -61,10 +71,10 @@ function Portfolio({ wallet, token, chain }) {
           : "-"
       );
     }
-  }, [totalWorth, tokenJson]);
+  }, [tokenJson, totalWorth]);
 
   useEffect(() => {
-    if (tokenJson) {
+    if (tokenJson[token]) {
       var _current_price = tokenSummary.price;
 
       var best_delta = 0;

@@ -14,6 +14,8 @@ function Connect() {
     if (isAuthenticated) {
       setWallet(user.get("ethAddress"));
       value.setWalletAddr(user.get("ethAddress"));
+      let { walletAddr } = value.state;
+      console.log("after auth wallet", walletAddr);
     }
   }, [isAuthenticated]);
 

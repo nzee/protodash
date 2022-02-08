@@ -7,11 +7,13 @@ import { useState, useEffect } from "react";
 import { createContext, useContext } from "react";
 import { useMoralis } from "react-moralis";
 import Portfolio from "../components/Portfolio";
+import CTA from "../components/CTA";
 import DexGuru, { ChainsListModel } from "dexguru-sdk";
 
 export default function Home() {
   const [tokenFinance, setTokenFinance] = useState({});
   const [tokenPrice, setTokenPrice] = useState(0);
+  const [tokenAvailable, setTokenAvailable] = useState(false);
   const [volume, setVolume] = useState(0);
   const { isAuthenticated, user, authenticate, logout } = useMoralis();
   const value = useContext(AppContext);
@@ -24,11 +26,34 @@ export default function Home() {
 
   useEffect(async () => {
     const response = await sdk.getTokenFinance(chain, token);
-
-    console.log(response);
     setTokenPrice(response.price_usd);
     setVolume(response.volume_24h_usd);
   }, []);
+
+  useEffect(() => {
+    fetch(
+      `https://openapi.debank.com/v1/user/token_list?id=${walletAddr}&chain_id=avax&is_all=true`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("debank", data);
+        try {
+          var _available = data.filter((t) => t.id == token)[0];
+          setTokenAvailable(true);
+        } catch (e) {
+          setTokenAvailable(false);
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      // setWallet(user.get("ethAddress"));
+      value.setWalletAddr(user.get("ethAddress"));
+      let { walletAddr } = value.state;
+      console.log("after auth wallet", walletAddr);
+    }
+  }, [isAuthenticated]);
 
   return (
     <div>
@@ -168,12 +193,17 @@ export default function Home() {
               <div className="px-6">
                 {isAuthenticated ? (
                   <>
-                    <Portfolio
-                      key={token}
-                      wallet={walletAddr}
-                      chain={chain}
-                      token={token}
-                    />
+                    {tokenAvailable ? (
+                      <Portfolio
+                        key={token}
+                        wallet={walletAddr}
+                        chain={chain}
+                        token={token}
+                        available={tokenAvailable}
+                      />
+                    ) : (
+                      <CTA />
+                    )}
                   </>
                 ) : (
                   <Connect />

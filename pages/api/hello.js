@@ -11,6 +11,7 @@ export default async function handler(req, res) {
 
   var chain = "43114";
   // var wallet = "0xe66037d732ac018358a999ea4b8f4a561e87b7e0";
+  console.log("wallet:", wallet);
 
   const response = await sdk.getWalletSwaps(
     chain,
