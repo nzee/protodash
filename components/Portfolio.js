@@ -293,7 +293,7 @@ function Portfolio({ wallet, token, chain }) {
                                 txn.amount_usd >
                               0
                                 ? "text-green-800"
-                                : "text-gray-800"
+                                : "text-gray-900"
                             }`}
                           >
                             {" "}
