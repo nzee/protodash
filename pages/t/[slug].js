@@ -40,9 +40,6 @@ function Details() {
       setTokenPrice(response.price_usd);
       setVolume(response.volume_24h_usd);
     }
-  }, [tokenBasics]);
-
-  useEffect(() => {
     fetch(
       `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=${
         tokenBasics && tokenBasics.chain
@@ -58,7 +55,7 @@ function Details() {
         console.log("available?", _available);
         _available ? setTokenAvailable(true) : setTokenAvailable(false);
       });
-  }, [wallet, tokenBasics]);
+  }, [tokenBasics]);
 
   useEffect(() => {
     if (isAuthenticated) {
