@@ -10,14 +10,14 @@ function Connect() {
   const value = useContext(AppContext);
   let { walletAddr } = value.state;
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      setWallet(user.get("ethAddress"));
-      value.setWalletAddr(user.get("ethAddress"));
-      let { walletAddr } = value.state;
-      console.log("after auth wallet", walletAddr);
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     setWallet(user.get("ethAddress"));
+  //     value.setWalletAddr(user.get("ethAddress"));
+  //     let { walletAddr } = value.state;
+  //     console.log("after auth wallet", walletAddr);
+  //   }
+  // }, [isAuthenticated]);
 
   return (
     <div>

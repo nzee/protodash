@@ -1,16 +1,21 @@
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Connect from "../components/Connect";
-import AppContext from "../components/AppContext";
-import { useState, useEffect } from "react";
+import styles from "../../styles/Home.module.css";
+import Connect from "../../components/Connect";
+import AppContext from "../../components/AppContext";
 import { createContext, useContext } from "react";
 import { useMoralis } from "react-moralis";
-import Portfolio from "../components/Portfolio";
-import CTA from "../components/CTA";
+import Portfolio from "../../components/Portfolio";
+import CTA from "../../components/CTA";
 import DexGuru, { ChainsListModel } from "dexguru-sdk";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-export default function Home() {
+function Details() {
+  const router = useRouter();
+  const [tokenBasics, setTokenBasics] = useState(false);
+  const { slug } = router.query;
+
   const [tokenFinance, setTokenFinance] = useState({});
   const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAvailable, setTokenAvailable] = useState(false);
@@ -26,26 +31,33 @@ export default function Home() {
   let dollarUSLocale = Intl.NumberFormat("en-US");
 
   useEffect(async () => {
-    const response = await sdk.getTokenFinance(chain, token);
-    setTokenPrice(response.price_usd);
-    setVolume(response.volume_24h_usd);
-  }, []);
+    if (tokenBasics) {
+      const response = await sdk.getTokenFinance(
+        tokenBasics.chainId,
+        tokenBasics.token
+      );
+      setTokenPrice(response.price_usd);
+      setVolume(response.volume_24h_usd);
+    }
+  }, [tokenBasics]);
 
   useEffect(() => {
     fetch(
-      `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=avax&is_all=true`
+      `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=${
+        tokenBasics && tokenBasics.chain
+      }&is_all=true`
     )
       .then((response) => response.json())
       .then((data) => {
         console.log("debank", data);
         try {
           var _available = data.filter((t) => t.id == token)[0];
-          setTokenAvailable(true);
-        } catch (e) {
-          setTokenAvailable(false);
-        }
+        } catch (e) {}
+        //   setTokenAvailable(true);
+        console.log("available?", _available);
+        _available ? setTokenAvailable(true) : setTokenAvailable(false);
       });
-  }, []);
+  }, [wallet, tokenBasics]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -53,6 +65,14 @@ export default function Home() {
       setWallet(user.get("ethAddress"));
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    fetch(`/api/tokens`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTokenBasics(data.tokens.filter((t) => t.slug === slug)[0]);
+      });
+  }, [slug]);
 
   return (
     <div>
@@ -70,8 +90,7 @@ export default function Home() {
           <div
             className="absolute top-0 w-full h-full bg-center bg-cover"
             style={{
-              backgroundImage:
-                'url("https://cdn.tofunft.com/covers/1qkvfy776zb87gi.jpg/1440.png")',
+              backgroundImage: `url("${tokenBasics && tokenBasics.cover}")`,
             }}
           >
             <span
@@ -108,7 +127,7 @@ export default function Home() {
                     <div className="relative">
                       <img
                         alt="..."
-                        src="https://pbs.twimg.com/profile_images/1485280648478797833/f5bEDj8Y_400x400.jpg"
+                        src={tokenBasics && tokenBasics.pfp}
                         className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
                       />
                     </div>
@@ -119,7 +138,7 @@ export default function Home() {
                 </div>
                 <div className="text-center mt-12">
                   <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                    Universe (🌌,🌌) 🔺
+                    {tokenBasics && tokenBasics.title}
                   </h3>
                   <div className="w-full px-4 lg:order-1">
                     <div className="flex justify-center py-4 lg:pt-4 pt-8">
@@ -176,9 +195,7 @@ export default function Home() {
                   <div className="flex flex-wrap justify-center">
                     <div className="w-full lg:w-9/12 px-4">
                       <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                        Universe $UNIV is an innovative DaaS on #Avalanche.
-                        Passive income up to 2,044% APR, NFTs, Sustainability &
-                        Metaverse. Founder: @cattyverse
+                        {tokenBasics && tokenBasics.desc}
                       </p>
                     </div>
                   </div>
@@ -196,8 +213,8 @@ export default function Home() {
                       <Portfolio
                         key={token}
                         wallet={wallet}
-                        chain={chain}
-                        token={token}
+                        chain={tokenBasics && tokenBasics.chainId}
+                        token={tokenBasics && tokenBasics.token}
                         available={tokenAvailable}
                       />
                     ) : (
@@ -240,3 +257,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Details;
