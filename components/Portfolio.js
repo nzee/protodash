@@ -117,7 +117,7 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
       });
       console.log("deltas::", best_trade);
 
-      setBestTrade(best_trade);
+      setBestTrade(false);
     }
   }, [tokenJson]);
 
@@ -125,6 +125,20 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
     <>
       <div className="max-w-full mx-4 py-6 sm:mx-auto sm:px-6 lg:px-8">
         <div className="sm:flex sm:space-x-4">
+          <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
+            <div className="bg-white p-5">
+              <div className="sm:flex sm:items-start">
+                <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                  <h3 className="text-sm leading-6 font-medium text-gray-400">
+                    Total Cost
+                  </h3>
+                  <p className="text-3xl font-bold text-black">
+                    ${parseFloat(tokenJson[token].total_buy_value).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
             <div className="bg-white p-5">
               <div className="sm:flex sm:items-start">
@@ -185,20 +199,6 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
                       )}
                     </p>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
-            <div className="bg-white p-5">
-              <div className="sm:flex sm:items-start">
-                <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
-                  <h3 className="text-sm leading-6 font-medium text-gray-400">
-                    Profits
-                  </h3>
-                  <p className="text-3xl font-bold text-black">
-                    ${parseFloat(pnl).toFixed(2)}
-                  </p>
                 </div>
               </div>
             </div>

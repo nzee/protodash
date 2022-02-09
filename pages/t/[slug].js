@@ -23,7 +23,7 @@ function Details() {
   const [wallet, setWallet] = useState(false);
   const { isAuthenticated, user, authenticate, logout } = useMoralis();
   const value = useContext(AppContext);
-  let { walletAddr } = value.state;
+  //   let { walletAddr } = value.state;
   let chain = "43114";
   let token = "0x959b88966fc5b261df8359961357d34f4ee27b4a";
   var _apiKey = process.env.NEXT_PUBLIC_DEXGURU_API_KEY;
