@@ -37,6 +37,7 @@ function Details() {
         tokenBasics.token
       );
       console.log("finance", response);
+      console.log("tokenBasics.chain", tokenBasics.chain);
       setTokenPrice(response.price_usd);
       setVolume(response.volume_24h_usd);
 
