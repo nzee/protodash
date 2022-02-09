@@ -73,7 +73,7 @@ function Details() {
       .then((data) => {
         setTokenBasics(data.tokens.filter((t) => t.slug === slug)[0]);
       });
-  }, [slug]);
+  }, [slug, wallet]);
 
   return (
     <div>
