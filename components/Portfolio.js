@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
+import Download from "./Download";
 
-function Portfolio({ wallet, token, chain }) {
+function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
   const [tokenJson, setTokenJson] = useState(false);
   const [history, setHistory] = useState(false);
   const [tokenSummary, setTokenSummary] = useState(false);
@@ -16,17 +17,15 @@ function Portfolio({ wallet, token, chain }) {
   useEffect(() => {
     console.log("walletttt:::", wallet);
     fetch(
-      `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=avax&is_all=true`
+      `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=${chainSlug}&is_all=true`
     )
       .then((response) => response.json())
       .then((data) => {
         console.log("debank", data);
         try {
           setTokenSummary(data.filter((t) => t.id == token)[0]);
-          setTokenAvailable(true);
         } catch (e) {
-          setTokenAvailable(false);
-          return;
+          console.log(e);
         }
       });
 
@@ -222,7 +221,7 @@ function Portfolio({ wallet, token, chain }) {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Buy $UNIV
+                    Buy ${slug}
                   </a>
                 </div>
               </div>
@@ -344,6 +343,12 @@ function Portfolio({ wallet, token, chain }) {
                   bestTrade &&
                   `https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`
                 }
+              />
+            </div>
+
+            <div className="m-auto my-6">
+              <Download
+                url={`https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`}
               />
             </div>
             <br />

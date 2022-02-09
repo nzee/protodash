@@ -1,6 +1,6 @@
 import React from "react";
 
-function CTA() {
+function CTA({ slug }) {
   return (
     <section className="py-1 bg-white-50">
       <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-12">
@@ -13,7 +13,7 @@ function CTA() {
               target="_blank"
               rel="noreferrer"
             >
-              Buy $UNIV
+              Buy ${slug}
             </a>
           </div>
           <br />

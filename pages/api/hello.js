@@ -3,13 +3,13 @@ import DexGuru, { ChainsListModel } from "dexguru-sdk";
 
 export default async function handler(req, res) {
   var _apiKey = process.env.NEXT_PUBLIC_DEXGURU_API_KEY;
-  const { wallet, token } = req.query;
+  const { wallet, token, chain } = req.query;
 
   const sdk = new DexGuru(_apiKey, "https://api.dev.dex.guru");
 
   var amm = "all";
 
-  var chain = "43114";
+  // var chain = "43114";
   // var wallet = "0xe66037d732ac018358a999ea4b8f4a561e87b7e0";
   console.log("wallet:", wallet);
 

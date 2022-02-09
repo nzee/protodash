@@ -12,6 +12,18 @@ export default async function handler(req, res) {
         pfp: "https://pbs.twimg.com/profile_images/1485280648478797833/f5bEDj8Y_400x400.jpg",
         cover: "https://cdn.tofunft.com/covers/1qkvfy776zb87gi.jpg/1440.png",
       },
+      {
+        token: "0x7015587f6ed157267d9894c5673c4c0cbd0083f4",
+        chain: "matic",
+        chainId: 137,
+        twitter: "cubo_money",
+        title: "Cubo Money",
+        desc: "We’re building high-yield, liquidity owning nodes. Join us and create a $CUBO today! ",
+        slug: "cubo",
+        pfp: "https://pbs.twimg.com/profile_images/1470678308694249472/6Tk117VC_400x400.jpg",
+        cover:
+          "https://pbs.twimg.com/profile_banners/1467966583964372995/1642527908/1500x500",
+      },
     ],
   });
 }

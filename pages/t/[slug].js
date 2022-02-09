@@ -36,6 +36,7 @@ function Details() {
         tokenBasics.chainId,
         tokenBasics.token
       );
+      console.log("finance", response);
       setTokenPrice(response.price_usd);
       setVolume(response.volume_24h_usd);
     }
@@ -51,7 +52,7 @@ function Details() {
       .then((data) => {
         console.log("debank", data);
         try {
-          var _available = data.filter((t) => t.id == token)[0];
+          var _available = data.filter((t) => t.id == tokenBasics.token)[0];
         } catch (e) {}
         //   setTokenAvailable(true);
         console.log("available?", _available);
@@ -61,7 +62,7 @@ function Details() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      // setWallet(user.get("ethAddress"));
+      //setWallet("0xe66037d732ac018358a999ea4b8f4a561e87b7e0");
       setWallet(user.get("ethAddress"));
     }
   }, [isAuthenticated]);
@@ -211,14 +212,16 @@ function Details() {
                   <>
                     {tokenAvailable ? (
                       <Portfolio
-                        key={token}
+                        key={tokenBasics && tokenBasics.token}
                         wallet={wallet}
+                        slug={tokenBasics && tokenBasics.slug}
                         chain={tokenBasics && tokenBasics.chainId}
+                        chainSlug={tokenBasics && tokenBasics.chain}
                         token={tokenBasics && tokenBasics.token}
                         available={tokenAvailable}
                       />
                     ) : (
-                      <CTA />
+                      <CTA slug={tokenBasics && tokenBasics.slug} />
                     )}
                   </>
                 ) : (
