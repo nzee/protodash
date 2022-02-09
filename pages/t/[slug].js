@@ -41,6 +41,11 @@ function Details() {
       setTokenPrice(response.price_usd);
       setVolume(response.volume_24h_usd);
 
+      console.log(
+        "fetch url",
+        `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=${tokenBasics.chain}&is_all=true`
+      );
+
       fetch(
         `https://openapi.debank.com/v1/user/token_list?id=${wallet}&chain_id=${tokenBasics.chain}&is_all=true`
       )
