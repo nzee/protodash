@@ -133,7 +133,9 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
                     Total Cost
                   </h3>
                   <p className="text-3xl font-bold text-black">
-                    ${parseFloat(tokenJson[token].total_buy_value).toFixed(2)}
+                    $
+                    {tokenJson[token] &&
+                      parseFloat(tokenJson[token].total_buy_value).toFixed(2)}
                   </p>
                 </div>
               </div>
