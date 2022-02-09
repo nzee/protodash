@@ -164,7 +164,7 @@ function Details() {
                           >
                             <div>
                               <p className="text-3xl font-semibold text-center text-gray-800">
-                                13,320+
+                                {tokenBasics && tokenBasics.tokenHolders}
                               </p>
                               <p className="text-lg text-center text-gray-500">
                                 Token Holders

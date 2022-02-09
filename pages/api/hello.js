@@ -91,7 +91,7 @@ export default async function handler(req, res) {
         txn.tokens_out[0].price_usd;
       tokens_json[txn.tokens_out[0].address]["total_buys"] += 1;
       tokens_json[txn.tokens_out[0].address]["total_buy_amount"] +=
-        txn.tokens_out[0].price_usd;
+        txn.tokens_out[0].amount;
 
       tokens_json[txn.tokens_out[0].address]["total_buy_value"] +=
         txn.amount_usd;

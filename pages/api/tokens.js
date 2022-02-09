@@ -11,6 +11,7 @@ export default async function handler(req, res) {
         slug: "univ",
         pfp: "https://pbs.twimg.com/profile_images/1485280648478797833/f5bEDj8Y_400x400.jpg",
         cover: "https://cdn.tofunft.com/covers/1qkvfy776zb87gi.jpg/1440.png",
+        tokenHolders: "13,320+",
       },
       {
         token: "0x7015587f6ed157267d9894c5673c4c0cbd0083f4",
@@ -23,6 +24,20 @@ export default async function handler(req, res) {
         pfp: "https://pbs.twimg.com/profile_images/1470678308694249472/6Tk117VC_400x400.jpg",
         cover:
           "https://pbs.twimg.com/profile_banners/1467966583964372995/1642527908/1500x500",
+        tokenHolders: "3,000+",
+      },
+      {
+        token: "0x83a283641c6b4df383bcddf807193284c84c5342",
+        chain: "avax",
+        chainId: 43114,
+        twitter: "VaporNodes",
+        title: "VaporFi",
+        desc: "Building a robust #DeFi treasury with your favorite projects. #BAYC #3442 - NaaS protocol @avalanchavax - We pay you 1% per day!",
+        slug: "vpnd",
+        pfp: "https://pbs.twimg.com/profile_images/1488490135595503616/VsZwN87I_400x400.png",
+        cover:
+          "https://pbs.twimg.com/profile_banners/1388183620255461385/1643718680/1500x500",
+        tokenHolders: "4,500+",
       },
     ],
   });

@@ -91,7 +91,7 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
       tokenJson[token].buys.map((txn) => {
         let _delta = (_current_price * 100) / txn.tokens_out[0].price_usd;
         _delta = _delta - 100;
-
+        console.log("delyaaaaa:", _delta);
         if (_delta > _current_best_delta) {
           _current_best_delta = _delta;
           best_trade = {
@@ -99,6 +99,8 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
             entry_price: parseFloat(txn.tokens_out[0].price_usd).toFixed(5),
             current_price: parseFloat(_current_price).toFixed(5),
           };
+        } else {
+          best_trade = false;
         }
 
         // _best_delta[txn.block_number] = {
@@ -114,6 +116,7 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
         // });
       });
       console.log("deltas::", best_trade);
+
       setBestTrade(best_trade);
     }
   }, [tokenJson]);
@@ -331,26 +334,29 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
             </div>
           </div>
           <br />
+          {bestTrade ? (
+            <div className="flex flex-col py-10 border-t-2">
+              <h1 className=" font-bold text-2xl m-auto">Share on Twitter</h1>
+              <br />
+              <div>
+                <img
+                  src={
+                    bestTrade &&
+                    `https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`
+                  }
+                />
+              </div>
 
-          <div className="flex flex-col py-10 border-t-2">
-            <h1 className=" font-bold text-2xl m-auto">Share on Twitter</h1>
-            <br />
-            <div>
-              <img
-                src={
-                  bestTrade &&
-                  `https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`
-                }
-              />
+              <div className="m-auto my-6">
+                <Download
+                  url={`https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`}
+                />
+              </div>
+              <br />
             </div>
-
-            <div className="m-auto my-6">
-              <Download
-                url={`https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`}
-              />
-            </div>
-            <br />
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </section>
     </>
