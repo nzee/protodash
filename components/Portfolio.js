@@ -55,9 +55,7 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
   }, [abp]);
 
   useEffect(() => {
-    if (tokenAvailable) {
-      setTotalWorth(tokenSummary.amount * tokenSummary.price);
-    }
+    setTotalWorth(tokenSummary.amount * tokenSummary.price);
   }, [tokenSummary]);
 
   useEffect(() => {

@@ -62,7 +62,7 @@ function Details() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      //setWallet("0xe66037d732ac018358a999ea4b8f4a561e87b7e0");
+      //   setWallet("");
       setWallet(user.get("ethAddress"));
     }
   }, [isAuthenticated]);
