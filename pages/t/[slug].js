@@ -23,7 +23,7 @@ function Details() {
   const [wallet, setWallet] = useState(false);
   const { isAuthenticated, user, authenticate, logout } = useMoralis();
   const value = useContext(AppContext);
-  //   let { walletAddr } = value.state;
+  let { walletAddr } = value.state;
   let chain = "43114";
   let token = "0x959b88966fc5b261df8359961357d34f4ee27b4a";
   var _apiKey = process.env.NEXT_PUBLIC_DEXGURU_API_KEY;
@@ -63,11 +63,12 @@ function Details() {
   }, [tokenBasics]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      //   setWallet("");
-      setWallet(user.get("ethAddress"));
+    if (walletAddr) {
+      // setWallet("0x375495bda1a990edde7f4fbf176c3dfff81fe0dd");
+      //   setWallet(user.get("ethAddress"));
+      setWallet(walletAddr);
     }
-  }, [isAuthenticated]);
+  }, [walletAddr]);
 
   useEffect(() => {
     fetch(`/api/tokens`)
@@ -210,7 +211,7 @@ function Details() {
           <div className="container mx-auto px-4">
             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg ">
               <div className="px-6">
-                {isAuthenticated ? (
+                {walletAddr ? (
                   <>
                     {tokenAvailable ? (
                       <Portfolio
@@ -227,7 +228,7 @@ function Details() {
                     )}
                   </>
                 ) : (
-                  <Connect />
+                  <Connect slug={slug} />
                 )}
               </div>
             </div>

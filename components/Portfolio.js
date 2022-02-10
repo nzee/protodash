@@ -14,6 +14,8 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
   const [bestTrade, setBestTrade] = useState(false);
   var profits = 0;
 
+  // var wallet = "0x5156280b0c3b876c72d7b406b22e394ffd284ba1";
+
   useEffect(() => {
     console.log("walletttt:::", wallet);
     fetch(
@@ -134,8 +136,9 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
                   </h3>
                   <p className="text-3xl font-bold text-black">
                     $
-                    {tokenJson[token] &&
-                      parseFloat(tokenJson[token].total_buy_value).toFixed(2)}
+                    {tokenJson[token]
+                      ? parseFloat(tokenJson[token].total_buy_value).toFixed(2)
+                      : "loading.."}
                   </p>
                 </div>
               </div>

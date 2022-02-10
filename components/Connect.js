@@ -1,11 +1,13 @@
 import React from "react";
 import AppContext from "../components/AppContext";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useNewMoralisObject } from "react-moralis";
 
-function Connect() {
+function Connect({ slug }) {
   const { isAuthenticated, user, authenticate } = useMoralis();
   const [wallet, setWallet] = useState(false);
+  const [tempWallet, setTempWallet] = useState(false);
+  const { isSaving, error, save } = useNewMoralisObject("wallets");
 
   const value = useContext(AppContext);
   let { walletAddr } = value.state;
@@ -35,7 +37,7 @@ function Connect() {
             </div>
             <div className="block sm:flex md:block lg:flex items-center justify-center">
               <span className="text-gray-700 text-2xl ml-3 my-6">
-                Connect Wallet to
+                Enter Wallet to
               </span>
             </div>
             <div className="flex justify-center mt-3">
@@ -58,7 +60,7 @@ function Connect() {
                     </svg>
                   </div>
                   <span className="text-gray-700 text-lg ml-3">
-                    View all your UNIV Transactions
+                    View all your ${slug && slug.toUpperCase()} Transactions
                   </span>
                 </li>
                 <li className="flex items-center mt-3">
@@ -100,18 +102,51 @@ function Connect() {
                     </svg>
                   </div>
                   <span className="text-gray-700 text-lg ml-3">
-                    Suggestions on LP tooks to take part in
+                    Suggestions on LP pools to take part in
                   </span>
                 </li>
               </ul>
             </div>
+            <form className="m-auto my-8 max-w-sm">
+              <div className="flex items-center border-b border-teal-500 py-2">
+                <input
+                  className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  type="text"
+                  placeholder="Add Your Wallet Address"
+                  aria-label="Full name"
+                  onChange={(e) => setTempWallet(e.target.value)}
+                />
+                <button
+                  className="flex-shrink-0 bg-green-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+                  type="button"
+                  onClick={() => {
+                    setWallet(tempWallet);
+                    value.setWalletAddr(tempWallet);
+                    let wallet = tempWallet;
+                    save({ wallet: wallet, slug: slug });
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+              {wallet}
+            </form>
+
+            {/* <div className="block flex items-center justify-center  p-8 text-md font-semibold text-gray-800 uppercase mt-8">
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="username"
+                type="text"
+                placeholder="Enter your Wallet Address"
+              ></input>
+            </div>
             <a
-              className="block flex items-center justify-center bg-gray-200 hover:bg-gray-300 p-8 text-md font-semibold text-gray-800 uppercase mt-16"
+              className="block flex items-center justify-center bg-gray-200 hover:bg-gray-300 p-8 text-md font-semibold text-gray-800 uppercase mt-4"
               onClick={() => authenticate()}
             >
               <span>Connect Wallet</span>
               <span className="font-medium text-gray-700 ml-2">➔</span>
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
