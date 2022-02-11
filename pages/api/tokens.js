@@ -39,6 +39,19 @@ export default async function handler(req, res) {
           "https://pbs.twimg.com/profile_banners/1388183620255461385/1643718680/1500x500",
         tokenHolders: "4,500+",
       },
+      {
+        token: "0x6e84a6216ea6dacc71ee8e6b0a5b7322eebc0fdd",
+        chain: "avax",
+        chainId: 43114,
+        twitter: "TraderJoe_xyz",
+        title: "Joe Token",
+        desc: "Your One-Stop-Shop DeFi Platform. #1 DEX on #Avalanche. Serving the Community at the Frontier of DeFi ",
+        slug: "joe",
+        pfp: "https://styles.redditmedia.com/t5_4wqgbi/styles/communityIcon_hwxlimnujqh71.png",
+        cover:
+          "https://pbs.twimg.com/profile_banners/1380341547154083844/1640996508/1500x500",
+        tokenHolders: "52,600+",
+      },
     ],
   });
 }
