@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
 import Download from "./Download";
+import { Image, Video, Transformation } from "cloudinary-react";
 
-function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
+function Portfolio({ wallet, token, chain, chainSlug, slug, available, pfp }) {
   const [tokenJson, setTokenJson] = useState(false);
   const [history, setHistory] = useState(false);
   const [tokenSummary, setTokenSummary] = useState(false);
@@ -79,14 +80,6 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
       var best_delta = 0;
       var best_trade = {};
 
-      // tokenJson[token].buys.map((txn) => {
-      //   let _best_delta = {}
-      //   _best_delta[txn.block_number] = {
-      //     delta: 0,
-      //     entry_price: 0,
-      //     current_price: 0,
-      //   };
-      // });
       var _delta = 0;
       var _current_best_delta = 0;
 
@@ -119,7 +112,7 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
       });
       console.log("deltas::", best_trade);
 
-      setBestTrade(false);
+      setBestTrade(best_trade);
     }
   }, [tokenJson]);
 
@@ -169,7 +162,14 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
                     <p className="text-3xl font-bold text-black">
                       ${parseFloat(abp).toFixed(4)}
                     </p>
-                    <p className="ml-4 flex items-center justify-end text-green-500 text-md">
+
+                    <p
+                      className={
+                        delta > 0
+                          ? "ml-4 flex items-center justify-end text-green-500 text-md"
+                          : "ml-4 flex items-center justify-end text-red-500 text-md"
+                      }
+                    >
                       <span className="font-bold">{delta}%</span>
                       {delta > 0 ? (
                         <svg
@@ -339,17 +339,73 @@ function Portfolio({ wallet, token, chain, chainSlug, slug, available }) {
             </div>
           </div>
           <br />
+
           {bestTrade ? (
             <div className="flex flex-col py-10 border-t-2">
               <h1 className=" font-bold text-2xl m-auto">Share on Twitter</h1>
               <br />
               <div>
-                <img
+                {/* https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$0.00005,x_285/l_text:Arial_45_bold:Current%20Price:%20$0.0003,x_285,y_75/co_rgb:38db36,l_text:Arial_45_bold:Total%20Gains:%20+$305,x_285,y_200/l_text:Arial_45_bold:My%20Best%20UNIV%20Trade:,x_285,y_-190/v1644529379/defidash/Capture7894756.png */}
+                {/* <img
                   src={
                     bestTrade &&
                     `https://res.cloudinary.com/motogarage/image/upload/l_text:Arial_45_bold:Entry%20Price:%20$${bestTrade.entry_price},x_285/l_text:Arial_45_bold:Current%20Price:%20$${bestTrade.current_price},x_285,y_75/co_rgb:38bd36,l_text:Arial_45_bold:Total%20Gains:%20+${bestTrade.delta}%25,x_285,y_200/v1644240478/defidash/Capture51564.png`
                   }
-                />
+                /> */}
+                <Image
+                  cloud_name="motogarage"
+                  publicId="defidash/Capture7894756.png"
+                >
+                  <Transformation
+                    overlay={{
+                      fontFamily: "Arial",
+                      fontSize: 45,
+                      fontWeight: "bold",
+                      text: "Entry Price: $" + bestTrade.entry_price,
+                    }}
+                    x="285"
+                  />
+                  <Transformation
+                    overlay={{
+                      fontFamily: "Arial",
+                      fontSize: 45,
+                      fontWeight: "bold",
+                      text: "Current Price: $" + bestTrade.current_price,
+                    }}
+                    x="285"
+                    y="75"
+                  />
+                  <Transformation
+                    color="#38db36"
+                    overlay={{
+                      fontFamily: "Arial",
+                      fontSize: 45,
+                      fontWeight: "bold",
+                      text: "Total Gains: " + bestTrade.delta + "%",
+                    }}
+                    x="285"
+                    y="200"
+                  />
+                  <Transformation
+                    overlay={{
+                      fontFamily: "Arial",
+                      fontSize: 45,
+                      fontWeight: "bold",
+                      text: `My Best $${slug.toUpperCase()} Trade`,
+                    }}
+                    x="285"
+                    y="-190"
+                  />
+
+                  <Transformation
+                    overlay={{
+                      url: pfp,
+                    }}
+                    x="-300"
+                  />
+
+                  {/* <Transformation flags="layer_apply" /> */}
+                </Image>
               </div>
 
               <div className="m-auto my-6">

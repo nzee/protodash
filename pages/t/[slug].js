@@ -222,6 +222,7 @@ function Details() {
                         chainSlug={tokenBasics && tokenBasics.chain}
                         token={tokenBasics && tokenBasics.token}
                         available={tokenAvailable}
+                        pfp={tokenBasics && tokenBasics.pfp}
                       />
                     ) : (
                       <CTA slug={tokenBasics && tokenBasics.slug} />
