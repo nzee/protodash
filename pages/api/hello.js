@@ -19,7 +19,9 @@ export default async function handler(req, res) {
     amm,
     "timestamp",
     "desc",
-    100
+    100,
+    0,
+    1610216130
   );
 
   var _total = response.total;
@@ -39,7 +41,8 @@ export default async function handler(req, res) {
       "timestamp",
       "desc",
       100,
-      _offset
+      _offset,
+      1610216130
     );
 
     next_response.data.map((tx) => {
